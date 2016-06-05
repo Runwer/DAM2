@@ -91,6 +91,8 @@ with open('DM_Juni.csv', 'rb') as f:
 
             #mydict = {rows[0]: rows[1] for rows in reader}
 
+#Testing Git
+
 outlist = []
 for o in outdict:
 
