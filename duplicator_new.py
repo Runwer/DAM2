@@ -1,14 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import pandas as pd
-from numpy import loadtxt
-from datetime import datetime
-from collections import defaultdict
-
-#df = pd.read_csv('DM_MAJ.csv', delimiter=';', low_memory=False)
 
 import csv
-
+import urllib
 
 tempdict = {}
 outdict = {}
@@ -43,6 +37,14 @@ with open('DM_Juni.csv', 'rb') as f:
                                 outdict[testkey]['facebook'] = int(outdict[testkey]['facebook']) + int(testface)
                                 if row[0] in fbpage:
                                     outdict[testkey]['FB Page'] = 1
+                                page = urllib.urlopen(testkey).read()
+                                print len(outdict)
+                                if page.find('dr-widget-video-player') != -1:
+                                    outdict[testkey]['Video'] = 1
+                                    print 'Video'
+                                elif page.find('live-wrapper') != -1 or page.find('live-stream') != -1:
+                                    outdict[testkey]['Live'] = 1
+                                    print 'live'
                                 dupl = 1
                     break
         if dupl == 0:
@@ -60,6 +62,18 @@ with open('DM_Juni.csv', 'rb') as f:
                     outdict[row[0]]['FB Page'] = 1
                 else:
                     outdict[row[0]]['FB Page'] = 0
+                page = urllib.urlopen(row[0]).read()
+                if page.find('dr-widget-video-player') != -1:
+                    outdict[row[0]]['Video'] = 1
+                    print 'Video'
+                else:
+                    outdict[row[0]]['Video'] = 0
+                    if page.find('live-wrapper') != -1 or page.find('live-stream') != -1:
+                        outdict[row[0]]['Live'] = 1
+                        print 'Video'
+                    else:
+                        outdict[row[0]]['Live'] = 0
+
             try:
                 testword = int(testword)
                 if testword < 1:
@@ -90,6 +104,8 @@ with open('DM_Juni.csv', 'rb') as f:
 
 
             #mydict = {rows[0]: rows[1] for rows in reader}
+
+#Testing Git
 
 outlist = []
 for o in outdict:
